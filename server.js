@@ -3,7 +3,13 @@
 const express = require('express');
 var sqlite3 = require('sqlite3').verbose();
 
-var db = new sqlite3.Database("users.sqlite");
+let db = new sqlite3.Database('./users.db', (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+  console.log('Connected to the users database.');
+});
+
 
 // Constants
 const PORT = 8080;
@@ -14,15 +20,17 @@ const app = express();
 
 app.disable('etag');
 
-app.get('/', (req, res) => {
-  let returnString = "";
+db.serialize(() => {
   db.each("SELECT * FROM users", (err, row) => {
-    returnString += row.login;
+    if (err) {
+      console.error(err.message);
+    }
+    console.log(row.login);
   });
-  res.send(returnString);
 });
 
-
+app.get('/', (req, res) => {
+});
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
