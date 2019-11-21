@@ -12,5 +12,5 @@ RUN apk --no-cache --virtual build-dependencies add \
     && npm install \
     && apk del build-dependencies
 
-EXPOSE 8080
+EXPOSE 3000
 CMD [ "node", "server.js" ]
