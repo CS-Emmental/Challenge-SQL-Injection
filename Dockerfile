@@ -1,19 +1,16 @@
-FROM node:alpine
+FROM node:9-alpine
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY . /usr/src/app
 
-COPY package*.json ./
-
-RUN apk update && apk upgrade && apk add sqlite
-
-COPY package*.json ./
-
-RUN apk add --no-cache --virtual .gyp \
-        python \
-        make \
-        g++ \
+# --no-cache: download package index on-the-fly, no need to cleanup afterwards
+# --virtual: bundle packages, remove whole bundle at once, when done
+RUN apk --no-cache --virtual build-dependencies add \
+    python \
+    make \
+    g++ \
     && npm install \
-    && apk del .gyp
-
-COPY . .
+    && apk del build-dependencies
 
 EXPOSE 8080
-CMD ["node", "server.js"]
+CMD [ "node", "server.js" ]
