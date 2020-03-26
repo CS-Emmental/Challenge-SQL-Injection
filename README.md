@@ -2,7 +2,7 @@
 
 ## Build the sqli1 docker image on your platform
 
-`docker bui
+`docker build -t sqli1 .`
 
 ## Use the following configuration for containers
 
